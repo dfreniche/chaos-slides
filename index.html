@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Chaos Slides</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+
+  <body>
+    <div id="deck">
+      <img id="slide" src="" />
+      <h1 id="text"></h1>
+    </div>
+
+    <div id="generatorForm">
+      <label for="numSlides">Number of slides: </label><input id="numSlides" type="text" value="5"/><br/>
+      <label for="slideSource">Slide Source: </label>
+        <select id="slideSource">
+          <option value="mongodb" selected>MongoDB Collection</option>
+          <option value="giphy">Giphy</option>
+        </select><br/>
+      <label for="textProbability">Random text probability: </label><input id="textProbability" type="text" value="25"/>%<br/>
+      <button id="generateSlides">Generate</button><br/>
+    </div>
+  </body>
+
+  <script src="randomWords.js"></script>
+  <script src="index.js"></script>
+</html>
