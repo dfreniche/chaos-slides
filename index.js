@@ -63,29 +63,54 @@ const addRandomText = (slides, prob) => {
 }
 
 const slidesFromMongoDB = async (num, textProb) => {
-  const randomSlides = await fetch(`${SLIDES_ENDPOINT}?num=${num}`).then(r => r.json());
-  slides = [ introSlide, ...addRandomText(randomSlides, textProb) ];
-  console.log(slides);
+  try {
+    const response = await fetch(`${SLIDES_ENDPOINT}?num=${num}`); // .then(r => r.json());
+
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    let randomSlides = await response.json();
+    slides = [introSlide, ...addRandomText(randomSlides, textProb)];
+    console.log(slides);
+  } catch (error) {
+    console.error(error)
+    alert("Problems getting data from MongoDB Atlas, did you set up your Atlas API endpont?" + error);
+  }
 }
 
 const slidesFromGiphy = async (num, textProb) => {
   const URL = `${GIPHY_ENDPOINT}?api_key=${GIPHY_KEY}&q=${randomWord()}&limit=${num}`;
-  let images = await fetch(URL).then(r => r.json());
-  let randomSlides = addRandomText(images.data.map( i =>  {return {image: i.images.downsized.url}} ), textProb);
-  slides = [ introSlide, ...randomSlides];
-  console.log(slides);
+  try {
+    const response = await fetch(URL);
+
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+
+    let images = await response.json();
+    let randomSlides = addRandomText(images.data.map(i => { return { image: i.images.downsized.url } }), textProb);
+    slides = [introSlide, ...randomSlides];
+    console.log(slides);
+  } catch (error) {
+    console.error(error)
+    alert("Problems getting data from Giphy, did you set up your API key?" + error);
+  }
 }
 
-const generateSlides = async function() {
+const generateSlides = async function () {
   let numSlides = parseInt(formNumSlides.value);
   let slideSource = formSlideSource.value;
   let textProbability = parseInt(formTextProbability.value);
   if (textProbability < 0) textProbability = 0;
   if (textProbability > 100) textProbability = 100;
-  if (slideSource === "mongodb") slidesFromMongoDB(numSlides, textProbability);
-  else if (slideSource === "giphy") slidesFromGiphy(numSlides, textProbability);
+  if (slideSource === "mongodb") await slidesFromMongoDB(numSlides, textProbability);
+  else if (slideSource === "giphy") await slidesFromGiphy(numSlides, textProbability);
   else alert("An error occured");
-  alert("Slide deck generated, use left and right arrows to move between slides. Refresh to generate a new deck.");
+
+  if (slides.length > 1) {
+    alert("Slide deck generated, use left and right arrows to move between slides. Refresh to generate a new deck.");
+  }
 }
 
 genBtn.addEventListener("click", () => {
