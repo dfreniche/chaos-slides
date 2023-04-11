@@ -53,6 +53,20 @@ document.addEventListener("keydown", e => {
   }
 });
 
+document.addEventListener("click", e => {
+  const clickTarget = e.target;
+  const clickTargetWidth = clickTarget.offsetWidth;
+  const xCoordInClickTarget = e.clientX - clickTarget.getBoundingClientRect().left;
+  if (clickTargetWidth / 2 > xCoordInClickTarget) {
+    // clicked left
+    previousSlide();
+  } else {
+    // clicked right
+    nextSlide();
+  }
+});
+
+
 const addRandomText = (slides, prob) => {
   return slides.map(slide => {
     let random = Math.round(Math.random()*100);
