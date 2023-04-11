@@ -12,6 +12,7 @@ const formNumSlides = document.querySelector("#numSlides");
 const formSlideSource = document.querySelector("#slideSource");
 const formTextProbability = document.querySelector("#textProbability");
 const textField = document.querySelector("#text");
+const forkMeBanner = document.querySelector("#forkMeBanner");
 
 let slides = [introSlide];
 
@@ -129,6 +130,7 @@ const generateSlides = async function () {
 genBtn.addEventListener("click", () => {
   generateSlides();
   genForm.style.visibility = "hidden";
+  forkMeBanner.style.visibility = "hidden";
 })
 
 showSlide();
